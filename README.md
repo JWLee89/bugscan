@@ -1,5 +1,5 @@
-# bugscan
+# Bashrc-manager
 
-A simple rust project to scan for bugs in a given project.
-The first version will provide a basic logger that can be 
-used to log messages onto the console. 
+A simple rust project to manage the .bashrc file. I created this project to learn rust and to manage my .bashrc file.
+
+

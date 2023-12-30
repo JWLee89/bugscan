@@ -1,6 +1,6 @@
 // TODO: update using clap
 use clap::{Parser};
-use bashrc_manager::{arguments::Command, establish_connection};
+use bashrc_manager::{arguments::Command, establish_connection, create_bashrc, get_bashrc};
 
 #[derive(Parser, Debug)]
 struct Args {
@@ -12,8 +12,11 @@ struct Args {
 fn main() {
     let args = Args::parse();
     let command_executed = &args.command;
-    let database = establish_connection();
-    println!("Command: got");
+    let mut connection = establish_connection();
+    
+    // Insert into database
+    create_bashrc(&mut connection, "default");
+    get_bashrc(&mut connection, "default");
 
     match command_executed {
 

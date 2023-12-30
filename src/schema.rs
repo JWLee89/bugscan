@@ -2,7 +2,7 @@
 
 diesel::table! {
     bashrc (id) {
-        id -> Nullable<Integer>,
+        id -> Integer,
         name -> Text,
         created_at -> Nullable<Timestamp>,
         updated_at -> Nullable<Timestamp>,
@@ -11,7 +11,7 @@ diesel::table! {
 
 diesel::table! {
     bashrc_entry (id) {
-        id -> Nullable<Integer>,
+        id -> Integer,
         bashrc_id -> Integer,
         file_settings -> Nullable<Binary>,
         created_at -> Nullable<Timestamp>,

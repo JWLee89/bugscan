@@ -2,10 +2,12 @@ use diesel::sqlite::SqliteConnection;
 use diesel::prelude::*;
 use dotenvy::dotenv;
 use std::env;
+use crate::models::Bashrc;
 
+use self::models::{NewBashrc};
+mod models; // Add the missing module declaration for `models`
 
 mod schema;
-
 
 pub fn establish_connection() -> SqliteConnection {
     dotenv().ok();
@@ -14,6 +16,31 @@ pub fn establish_connection() -> SqliteConnection {
     SqliteConnection::establish(&database_url)
         .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
+
+pub fn create_bashrc(conn: &mut SqliteConnection, name: &str) {
+    use schema::bashrc;
+
+    let new_bashrc = NewBashrc {
+        name,
+    };
+
+    diesel::insert_into(bashrc::table)
+        .values(&new_bashrc)
+        .execute(conn)
+        .expect("Error saving new bashrc");
+}
+
+pub fn get_bashrc(conn: &mut SqliteConnection, name: &str) {
+    use self::schema::bashrc::dsl::bashrc;
+
+    let result = bashrc
+        .filter(schema::bashrc::name.eq(name))
+        .load::<Bashrc>(conn)
+        .expect("Error loading bashrc data from database");
+
+    println!("Displaying {} bashrc", result.len());
+}
+
 
 pub mod arguments {
     use clap::{Subcommand};

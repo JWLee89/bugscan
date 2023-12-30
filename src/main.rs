@@ -1,8 +1,6 @@
 // TODO: update using clap
 use clap::{Parser};
-use bashrc_manager::arguments::Command;
-use bashrc_manager::database::database::Database;
-use rusqlite::{Connection, Result as SqlResult};
+use bashrc_manager::{arguments::Command, establish_connection};
 
 #[derive(Parser, Debug)]
 struct Args {
@@ -14,7 +12,8 @@ struct Args {
 fn main() {
     let args = Args::parse();
     let command_executed = &args.command;
-    let database = Database::new("bashrc_manager.db");
+    let database = establish_connection();
+    println!("Command: got");
 
     match command_executed {
 

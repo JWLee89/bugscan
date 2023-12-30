@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.4.11", features = ["derive"] } 
-rusqlite = "0.30.0"
+diesel = { version = "2.1.4", features = ["sqlite"] }
+dotenvy = { version = "0.15.7" }

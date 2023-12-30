@@ -1,4 +1,6 @@
 
+pub mod database;
+
 pub mod arguments {
     use clap::{Subcommand};
 
@@ -8,8 +10,16 @@ pub mod arguments {
     // E.g. teemo --list
     #[derive(Subcommand, Debug)]
     pub enum Command {
+        /// Set the path to the bashrc file
+        Bind {
+            #[clap(short='p', help="Set the path to the bashrc file")]
+            path: String,
+            #[clap(short='s', help="Show the currently bound path")]
+            show: bool,
+        },
+        /// List all the current settings
         List {
-            #[clap(short, long, short='v')]
+            #[clap(short, short='v')]
             verbose: bool,
         },
         /// Save the current state of the bashrc file
@@ -22,7 +32,7 @@ pub mod arguments {
             name: String,
         },
         Load,
-        Version 
+        Version
     }
 } 
 

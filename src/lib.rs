@@ -1,10 +1,11 @@
 use diesel::sqlite::SqliteConnection;
 use diesel::prelude::*;
 use dotenvy::dotenv;
+use schema::shell_commands::shell_command;
 use std::env;
-use crate::models::Bashrc;
+use crate::models::ShellCommand;
 
-use self::models::NewBashrc;
+use self::models::NewShellCommand;
 mod models; // Add the missing module declaration for `models`
 mod fs;
 mod schema;
@@ -34,25 +35,26 @@ pub fn establish_connection() -> SqliteConnection {
     output
 }
 
-pub fn create_bashrc(conn: &mut SqliteConnection, name: &str) {
-    use schema::bashrc;
+pub fn create_shell_command(conn: &mut SqliteConnection, name: &str, command: &str) {
+    use schema::shell_commands;
 
-    let new_bashrc = NewBashrc {
+    let new_shell_command = NewShellCommand {
         name,
+        shell_command: command
     };
 
-    diesel::insert_into(bashrc::table)
-        .values(&new_bashrc)
+    diesel::insert_into(shell_commands::table)
+        .values(&new_shell_command)
         .execute(conn)
         .expect("Error saving new bashrc");
 }
 
 pub fn get_bashrc(conn: &mut SqliteConnection, name: &str) {
-    use self::schema::bashrc::dsl::bashrc;
+    use self::schema::shell_commands::dsl::shell_commands;
 
-    let result = bashrc
-        .filter(schema::bashrc::name.eq(name))
-        .load::<Bashrc>(conn)
+    let result = shell_commands
+        .filter(schema::shell_commands::name.eq(name))
+        .load::<ShellCommand>(conn)
         .expect("Error loading bashrc data from database");
 
     println!("Displaying {} bashrc", result.len());
@@ -63,17 +65,14 @@ pub mod arguments {
     use clap::{Subcommand};
 
     // This is a list of all the arguments that can be passed to the program
-    // E.g. teemo --help
-    // E.g. teemo --version
-    // E.g. teemo --list
     #[derive(Subcommand, Debug)]
     pub enum Command {
-        /// Set the path to the bashrc file
-        Bind {
-            #[clap(short='p', help="Set the path to the bashrc file")]
-            path: String,
-            #[clap(short='s', help="Show the currently bound path")]
-            show: bool,
+        /// Add a new command to the bashrc file
+        Command {
+            #[clap(short='n', help="Name of the command")]
+            add: String,
+            #[clap(help="Show the commands")]
+            ls: String,
         },
         /// List all the current settings
         List {

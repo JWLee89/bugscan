@@ -2,7 +2,7 @@ use std::{fs::File, io::Read};
 
 // TODO: update using clap
 use clap::{Parser};
-use bashrc_manager::{arguments::Command, establish_connection, get_current_git_branch, get_bashrc};
+use bashrc_manager::{arguments::Command, establish_connection, create_shell_command};
 
 #[derive(Parser, Debug)]
 struct Args {
@@ -43,15 +43,13 @@ fn main() {
     let mut connection = establish_connection();
     let fs = BashrcFile { 
         file_path: "",
-    };
-    // println!("Contents: {:?}", fs.read());
-    let branch = get_current_git_branch();
-    println!("Current branch is : {:?}", branch);
+    };    
     // Insert into database
-    // create_bashrc(&mut connection, "default");
+    create_shell_command(&mut connection, "git feature", "captain teemo on duty");
     // get_bashrc(&mut connection, "default");
 
     match command_executed {
+        
         Command::List { verbose } => {
             println!("List: {:?}", verbose);
         },

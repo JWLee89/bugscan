@@ -4,9 +4,9 @@ use dotenvy::dotenv;
 use std::env;
 use crate::models::Bashrc;
 
-use self::models::{NewBashrc};
+use self::models::NewBashrc;
 mod models; // Add the missing module declaration for `models`
-
+mod fs;
 mod schema;
 
 pub fn establish_connection() -> SqliteConnection {
@@ -15,6 +15,23 @@ pub fn establish_connection() -> SqliteConnection {
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     SqliteConnection::establish(&database_url)
         .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
+}
+
+ /// Get the current git branch that we are currently on
+ pub fn get_current_git_branch() -> String {
+    let output = std::process::Command::new("git")
+        .arg("rev-parse")
+        .arg("--abbrev-ref")
+        .arg("HEAD")
+        .output()
+        .expect("failed to execute command: git rev-parse --abbrev-ref HEAD");
+
+    let output = String::from_utf8_lossy(&output.stdout);
+    let output = output.to_string();
+    let output = output.split("\n").collect::<Vec<&str>>();
+    let output = output[0].to_string();
+    let output = output.replace("* ", "");
+    output
 }
 
 pub fn create_bashrc(conn: &mut SqliteConnection, name: &str) {

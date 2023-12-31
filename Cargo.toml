@@ -6,5 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+chrono = { version = "0.4", features= ["serde"] }
 clap = { version = "4.4.11", features = ["derive"] } 
-rusqlite = "0.30.0"
+diesel = { version = "2.1.4", features = ["sqlite", "chrono"] }
+dotenvy = { version = "0.15.7" }

@@ -91,4 +91,29 @@ pub mod arguments {
         Load,
         Version
     }
+
+    // /// Add a new command to the bashrc file
+    // #[derive(Subcommand, Debug)]
+    // enum Add {
+    //     #[clap(short='n', help="Name of the command")]
+    //     name: String
+    // }
+    
+
 } 
+
+/// Parse double-brackets
+/// E.g. 
+/// Command name: cmt
+/// alias: -f
+/// value: 
+/// "git commit -m \"{{feature_name}}:\"${msg}" will become
+/// "git commit -m feature"
+/// If somebody enters the following
+/// > cmt -f teemo "add new meesage"
+/// the command output will be git commit -m "feature: add new message"
+/// TODO: Add new feature for adding new commit message
+struct DoubleBracketParser {
+    
+}
+
